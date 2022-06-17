@@ -7,7 +7,7 @@ Major changes are:
 - Snipe-IT Generated Assets ID's are synced back to the Mosyle device Asset Tags
 - Cleaned up some of the settings and made manufacturer and devices categories variables for easier set up
 - Added more comments in the code to explain what each block is doing
-- Added lots of print messages to help the user understand what is currently happening.
+- Added lots of print messages to help the user understand what is currently happening. Honestly, too much information. Most of this was my debugging process and I plan to clean it up some more.
 - If a device in Mosyle is a user enrolled device, the script assumes it is BYOB and does not add it into Snipe-IT
 - Snipe-IT has a default API rate limit of 120 calls per minute. Added logic to pause the script when rate is hit. Limit is definable in settings.ini if you have changed the default limit
 - It was our intention to get as much information about the device from Mosyle into Snipe-it. Because of this there are lots of custom fields currently hardcoded into this version of the script. Before running, take a look at buildPayloadFromMosyle in snipe.py and either change all attributes starting with "_snipeit_" to the matching database field in your Snipe-IT instance, or comment out the line.
