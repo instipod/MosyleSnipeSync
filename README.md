@@ -1,3 +1,5 @@
+This is a mirror from our internal GitLab
+
 Forked from [Python Mosyle2snipe](https://github.com/dem972/Mosyle_2snipe">Dem972's). It's a great bit of work and really helped me wrap my head around both APIs. Python is not my "native" language by any means, so pull requests and suggestions are always welcome.
 
 Major changes are:
