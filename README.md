@@ -1,6 +1,6 @@
 This is a mirror from our internal GitLab
 
-Forked from [Python Mosyle2snipe](https://github.com/dem972/Mosyle_2snipe">Dem972's). It's a great bit of work and really helped me wrap my head around both APIs. Python is not my "native" language by any means, so pull requests and suggestions are always welcome.
+Forked from Dem972's [Python Mosyle2snipe](https://github.com/dem972/Mosyle_2snipe). It's a great bit of work and really helped me wrap my head around both APIs. Python is not my "native" language by any means, so pull requests and suggestions are always welcome.
 
 Major changes are:
 - The "all" type in the last version of the script did not work, and the Mosyle API requires you to do one device type at a time. Created a loop to do each device type in a single run.
@@ -20,23 +20,23 @@ Before you start, make sure the following prerequisites are taken care of:
 - The [Colorama Libary](https://pypi.org/project/colorama/) (pip3 install colorama)
 
 [mosyle]
-    You will need to generate a new token from the Mosyle Admin console: Organization--> Api integration
-    Please note, with a recent update in mosyle, an admin's username and password is now requrired in the call. You might want to create a new user for this.
-    Also, just a fair warning. Be careful palying around with the Mosyle API. You can very much remove ADMIN rights from yourself.
+- You will need to generate a new token from the Mosyle Admin console: Organization--> Api integration
+- Please note, with a recent update in mosyle, an admin's username and password is now requrired in the call. You might want to create a new user for this.
+- Also, just a fair warning. Be careful palying around with the Mosyle API. You can very much remove ADMIN rights from yourself.
 
 [snipe-it]
-    Snipe url is the full url of your Snipe-IT instance's api. EG: https://snipeit.example.com/api/v1 (do not add a slash at the end!)
-    Generate the api key from the Snipe-IT seetings and for use in the configuration.ini
-    Manufacturer Id should be set to the Apple Manufacturer entry in Snipe-IT. If you have not done this already, add apple as a manufacturer.
-    If you have not done so already, you will need to create a category of devices for MacOS (we did "Computers"), iOS ( we did "Mobile/Tablets", and TVOS (we did "Media Players").
-    The script will attempt to take device user assignments from Mosyle and "check out" the devices to the same user in Snipe-It. The two services should already have idential users for this to work. We have both Mosyle and Snipe-IT bound to our active directory/ldap for this reason.
+- Snipe url is the full url of your Snipe-IT instance's api. EG: https://snipeit.example.com/api/v1 (do not add a slash at the end!)
+- Generate the api key from the Snipe-IT seetings and for use in the configuration.ini
+- Manufacturer Id should be set to the Apple Manufacturer entry in Snipe-IT. If you have not done this already, add apple as a manufacturer.
+- If you have not done so already, you will need to create a category of devices for MacOS (we did "Computers"), iOS ( we did "Mobile/Tablets", and TVOS (we did "Media Players").
+- The script will attempt to take device user assignments from Mosyle and "check out" the devices to the same user in Snipe-It. The two services should already have idential users for this to work. We have both Mosyle and Snipe-IT bound to our active directory/ldap for this reason.
 
 
 
 
 [MosyleSnipeSync]
-    Configure seetings.ini with the needed parameters.
-    Each line has a comment above explaining the setting
+- Configure seetings.ini with the needed parameters.
+- Each line has a comment above explaining the setting
 
 [Questions/Comments/Concerns?]
 
