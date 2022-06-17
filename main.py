@@ -25,8 +25,11 @@ apple_manufacturer_id = config['snipe-it']['manufacturer_id']
 macos_category_id = config['snipe-it']['macos_category_id']
 ios_category_id =  config['snipe-it']['ios_category_id']
 tvos_category_id =  config['snipe-it']['tvos_category_id']
+macos_feildset_id = config['snipe-it']['macos_feildset_id']
+ios_feildset_id = config['snipe-it']['ios_feildset_id']
+tvos_feildset_id = config['snipe-it']['tvos_feildset_id']
 deviceTypes = config['mosyle']['deviceTypes'].split(',')
-#cast to int
+
 snipe_rate_limit = int(config['snipe-it']['rate_limit'])
 
 
