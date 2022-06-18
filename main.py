@@ -25,9 +25,9 @@ apple_manufacturer_id = config['snipe-it']['manufacturer_id']
 macos_category_id = config['snipe-it']['macos_category_id']
 ios_category_id =  config['snipe-it']['ios_category_id']
 tvos_category_id =  config['snipe-it']['tvos_category_id']
-macos_feildset_id = config['snipe-it']['macos_feildset_id']
-ios_feildset_id = config['snipe-it']['ios_feildset_id']
-tvos_feildset_id = config['snipe-it']['tvos_feildset_id']
+macos_fieldset_id = config['snipe-it']['macos_fieldset_id']
+ios_fieldset_id = config['snipe-it']['ios_fieldset_id']
+tvos_fieldset_id = config['snipe-it']['tvos_fieldset_id']
 deviceTypes = config['mosyle']['deviceTypes'].split(',')
 
 snipe_rate_limit = int(config['snipe-it']['rate_limit'])
@@ -41,7 +41,7 @@ mosyle = Mosyle(config['mosyle']['token'], config['mosyle']['url'], config['mosy
 calltype = config['mosyle']['calltype']
 
 #setup the snipe-it api
-snipe = Snipe(apiKey,snipe_url,apple_manufacturer_id,macos_category_id,ios_category_id,tvos_category_id,snipe_rate_limit)
+snipe = Snipe(apiKey,snipe_url,apple_manufacturer_id,macos_category_id,ios_category_id,tvos_category_id,snipe_rate_limit, macos_fieldset_id, ios_fieldset_id, tvos_fieldset_id)
 
 for deviceType in deviceTypes:
     # Get the list of devices from Mosyle based on the deviceType and call type

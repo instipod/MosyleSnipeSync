@@ -14,6 +14,9 @@ class Snipe:
         self.tvos_category_id = tvos_category_id
         self.rate_limit = rate_limit
         self.request_count = 0
+        self.macos_feildset_id = macos_feildset_id
+        self.ios_feildset_id = ios_feildset_id
+        self.tvos_feildset_id = tvos_feildset_id
 
     @property
     def headers(self):
