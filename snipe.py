@@ -5,7 +5,7 @@ from colorama import Style
 
 
 class Snipe:
-    def __init__(self, snipetoken, url,manufacturer_id,macos_category_id,ios_category_id,tvos_category_id,rate_limit,macos_feildset_id,ios_feildset_id,tvos_feildset_id):
+    def __init__(self, snipetoken, url,manufacturer_id,macos_category_id,ios_category_id,tvos_category_id,rate_limit,macos_fieldset_id,ios_fieldset_id,tvos_fieldset_id):
         self.url = url
         self._snipetoken = snipetoken
         self.manufacturer_id = manufacturer_id
@@ -14,9 +14,9 @@ class Snipe:
         self.tvos_category_id = tvos_category_id
         self.rate_limit = rate_limit
         self.request_count = 0
-        self.macos_feildset_id = macos_feildset_id
-        self.ios_feildset_id = ios_feildset_id
-        self.tvos_feildset_id = tvos_feildset_id
+        self.macos_fieldset_id = macos_fieldset_id
+        self.ios_fieldset_id = ios_fieldset_id
+        self.tvos_fieldset_id = tvos_fieldset_id
 
     @property
     def headers(self):
@@ -44,7 +44,7 @@ class Snipe:
             "category_id": self.macos_category_id,
             "manufacturer_id": self.manufacturer_id,
             "model_number": model,
-            "fieldset_id": self.mac_os_feildset_id
+            "fieldset_id": self.mac_os_fieldset_id
         }
         print('Creating Snipe Model with payload:', payload)
         results = self.snipeItRequest("POST", "/models", json = payload)
@@ -99,7 +99,7 @@ class Snipe:
             "category_id": self.ios_category_id,
             "manufacturer_id": self.manufacturer_id,
             "model_number": model,
-            "fieldset_id": self.ios_feildset_id
+            "fieldset_id": self.ios_fieldset_id
         }
         return self.snipeItRequest("POST", "/models", json = payload)
     def createAppleTvModel(self, model):
@@ -109,7 +109,7 @@ class Snipe:
             "category_id": self.tvos_category_id,
             "manufacturer_id": self.manufacturer_id,
             "model_number": model,
-            "fieldset_id": self.tvos_feildset_id
+            "fieldset_id": self.tvos_fieldset_id
         }
         return self.snipeItRequest("POST", "/models", json = payload)
 
