@@ -11,6 +11,7 @@ Major changes are:
 - If a device in Mosyle is a user enrolled device, the script assumes it is BYOB and does not add it into Snipe-IT
 - Snipe-IT has a default API rate limit of 120 calls per minute. Added logic to pause the script when rate is hit. Limit is definable in settings.ini if you have changed the default limit
 - It was our intention to get as much information about the device from Mosyle into Snipe-it. Because of this there are lots of custom fields currently hardcoded into this version of the script. Before running, take a look at buildPayloadFromMosyle in snipe.py and either change all attributes starting with "_snipeit_" to the matching database field in your Snipe-IT instance, or comment out the line.
+- Optionally import model images from img.appledb.dev for apple devices
 
 
 Before you start, make sure the following prerequisites are taken care of:
@@ -21,7 +22,7 @@ Before you start, make sure the following prerequisites are taken care of:
 
 [mosyle]
 - You will need to generate a new token from the Mosyle Admin console: Organization--> Api integration
-- Please note, with a recent update in mosyle, an admin's username and password is now requrired in the call. You might want to create a new user for this.
+- Please note, with a recent update in Mosyle, an admin's username and password is now requrired in the call. You might want to create a new user for this.
 - Also, just a fair warning. Be careful palying around with the Mosyle API. You can very much remove ADMIN rights from yourself.
 
 [snipe-it]

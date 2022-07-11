@@ -21,6 +21,7 @@ class Snipe:
         self.macos_fieldset_id = macos_fieldset_id
         self.ios_fieldset_id = ios_fieldset_id
         self.tvos_fieldset_id = tvos_fieldset_id
+        self.apple_image_check = apple_image_check
 
     @property
     def headers(self):
@@ -50,25 +51,24 @@ class Snipe:
         else:
             print("the model was found")
 
-            if self.apple_image_check == True:
-                #does the model have a picture?
-                if jsonResult['rows'][0]['image'] is None:
-                    print("the model does not have a picture. Let, set one")
-                    #No, it does not. Let's update it.
-                    imageResponse = self.getImageForModel(model);
-                    if(imageResponse == False):
-                        print("loading the image failed..")
-                    else:
-                        payload = {
-                            "image": imageResponse
-                        }
-                        self.updateModel(str(jsonResult['rows'][0]['id']), payload)
-
-
+            #does the model have a picture?
+            if jsonResult['rows'][0]['image'] is None:
+                print("the model does not have a picture. Let, set one")
+                #No, it does not. Let's update it.
+                imageResponse = self.getImageForModel(model);
+                print("imageResponse", imageResponse)
+                if(imageResponse == False):
+                    print("loading the image failed..")
                 else:
-                    print('image already set.');
+                    payload = {
+                        "image": imageResponse
+                    }
+                    self.updateModel(str(jsonResult['rows'][0]['id']), payload)
+
+
             else:
-                print('Image Checks are disabled');    
+                print('image already set.');
+            
         #print(result)
         return result
     
@@ -207,8 +207,6 @@ class Snipe:
         elif(eithernetMac != None):
             finalPayload['_snipeit_mac_address_1'] = eithernetMac
         
-
-        
         return finalPayload
 
     def snipeItRequest(self, type, url, params = None, json = None):
@@ -237,20 +235,24 @@ class Snipe:
             return None
 
     def getImageForModel(self, modelNumber):
-        url = "https://img.appledb.dev/device@512/" + modelNumber + "/0.png"
-        print("Get image from URL", url)
-        try:
-            response = requests.get(url)
-            response.raise_for_status()
-            base64encoded = base64.b64encode(response.content).decode("utf8")
-            fullImageSring = "data:image/png;name=0.png;base64,"+ base64encoded;
-            return fullImageSring;
-        
+        if self.apple_image_check == True:
+
+            url = "https://img.appledb.dev/device@512/" + modelNumber + "/0.png"
+            print("Get image from URL", url)
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+                base64encoded = base64.b64encode(response.content).decode("utf8")
+                fullImageSring = "data:image/png;name=0.png;base64,"+ base64encoded;
+                return fullImageSring;
             
-        except requests.exceptions.HTTPError as err:
-            print(err)
+                
+            except requests.exceptions.HTTPError as err:
+                print(Fore.RED + "Error getting image from apple db", err, Style.RESET_ALL)
+                return False
+        else:
+            print("Image checking is disabled.")
             return False
-        
         
 
 #if __name__ == "__main__":

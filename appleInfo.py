@@ -1,4 +1,4 @@
-#this file can be run to update your snipe models without interacting with Mosyle.
+#this file can be run to update your Snipe-IT models without interacting with Mosyle.
 
 import base64
 from tracemalloc import stop
@@ -41,17 +41,6 @@ snipe_rate_limit = int(config['snipe-it']['rate_limit'])
 
 apple_image_check = config['snipe-it'].getboolean('apple_image_check')
 
-if apple_image_check == False:
-    print('were skipping')
-else:
-    print('apple_image_check is not truely false')
-
-
-
-print('apple_image_check is ',apple_image_check)
-
-stop()
-
 #setup the snipe-it api
 snipe = Snipe(apiKey,snipe_url,apple_manufacturer_id,macos_category_id,ios_category_id,tvos_category_id,snipe_rate_limit, macos_fieldset_id, ios_fieldset_id, tvos_fieldset_id,apple_image_check)
 
@@ -62,21 +51,27 @@ print(models);
 #loop through each model
 for model in models['rows']:
     #is the model's manufacturer Apple?
-    print("is the model's manufacturer Apple?", "checking manufacture id " + str(model['manufacturer']['id']) +" against known apple manufacturer id: "+ str(apple_manufacturer_id))
+    print('Processing model: ' + str(model['id']), model["model_number"])
+    print("Is the model's manufacturer Apple?", "checking manufacture id " + str(model['manufacturer']['id']) +" against known apple manufacturer id: "+ str(apple_manufacturer_id))
     if int(model['manufacturer']['id']) == int(apple_manufacturer_id):
         #yes!
-        print("Yes! Checking for photo!");
+        print(Fore.GREEN, "Yes! Checking for photo!", Style.RESET_ALL);
         #Does it need a picture?
         if model['image'] == None:
-            print("no photo. dowloading photos")
+            print("No photo. Dowloading photos")
             imageResponse = snipe.getImageForModel(model["model_number"]);
-            payload = {
-                "image": imageResponse
-            }
+            if imageResponse != False:
+                print("Photo Downloaded")
+                snipe.setImageForModel(model["id"],imageResponse.content)
+                payload = {
+                    "image": imageResponse
+                }
             
-            snipe.updateModel(str(model['id']), payload)
+                snipe.updateModel(str(model['id']), payload)
+            else:
+                print("no photo found, moving on")
         else:
             print("picture already set. Skipping")
     else:
-        print('model is not apple. Skip.')
+        print(Fore.YELLOW,'model is not apple. Skip.',Style.RESET_ALL)
 
