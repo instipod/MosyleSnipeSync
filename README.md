@@ -35,6 +35,7 @@ Before you start, make sure the following prerequisites are taken care of:
 
 
 [MosyleSnipeSync]
+- Copy settings-example.ini to settings.ini
 - Configure seetings.ini with the needed parameters.
 - Each line has a comment above explaining the setting
 
