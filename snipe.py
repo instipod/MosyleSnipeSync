@@ -1,11 +1,15 @@
+from cgi import print_arguments
+import mimetypes
+from unittest import result
 import requests
 import time
+import base64
 from colorama import Fore
 from colorama import Style
 
 
 class Snipe:
-    def __init__(self, snipetoken, url,manufacturer_id,macos_category_id,ios_category_id,tvos_category_id,rate_limit,macos_fieldset_id,ios_fieldset_id,tvos_fieldset_id):
+    def __init__(self, snipetoken, url,manufacturer_id,macos_category_id,ios_category_id,tvos_category_id,rate_limit,macos_fieldset_id,ios_fieldset_id,tvos_fieldset_id,apple_image_check):
         self.url = url
         self._snipetoken = snipetoken
         self.manufacturer_id = manufacturer_id
@@ -17,6 +21,7 @@ class Snipe:
         self.macos_fieldset_id = macos_fieldset_id
         self.ios_fieldset_id = ios_fieldset_id
         self.tvos_fieldset_id = tvos_fieldset_id
+        self.apple_image_check = apple_image_check
 
     @property
     def headers(self):
@@ -31,21 +36,57 @@ class Snipe:
         print('Requesting Snipe Harware list at url '+ self.url + "/hardware/byserial/")
         return self.snipeItRequest("GET", "/hardware/byserial/" + serial)
 
+    def listAllModels(self):
+        print('requesting all apple models')
+        return self.snipeItRequest("GET","/models", params = {"limit": "50", "offset": "0", "sort": "created_at", "order": "asc"})
+
     def searchModel(self, model):
         print('Requesting Snipe Model list')
         result = self.snipeItRequest("GET", "/models", params = {"limit": "50", "offset": "0", "search": model, "sort": "created_at", "order": "asc"})
+        print(result.json())
+        jsonResult = result.json()
+        #Did the search return a result?
+        if jsonResult['total'] == 0:
+            print("model was not found")
+        else:
+            print("the model was found")
+
+            #does the model have a picture?
+            if jsonResult['rows'][0]['image'] is None:
+                print("the model does not have a picture. Let, set one")
+                #No, it does not. Let's update it.
+                imageResponse = self.getImageForModel(model);
+                print("imageResponse", imageResponse)
+                if(imageResponse == False):
+                    print("loading the image failed..")
+                else:
+                    payload = {
+                        "image": imageResponse
+                    }
+                    self.updateModel(str(jsonResult['rows'][0]['id']), payload)
+
+
+            else:
+                print('image already set.');
+            
         #print(result)
         return result
     
     def createModel(self, model):
+
+        imageResponse = self.getImageForModel(model);
+        if(imageResponse == False):
+            imageResponse = None
 
         payload = {
 			"name": model,
             "category_id": self.macos_category_id,
             "manufacturer_id": self.manufacturer_id,
             "model_number": model,
-            "fieldset_id": self.mac_os_fieldset_id
+            "fieldset_id": self.mac_os_fieldset_id,
+            "image":imageResponse
         }
+
         print('Creating Snipe Model with payload:', payload)
         results = self.snipeItRequest("POST", "/models", json = payload)
         #print('the server returned ', results);
@@ -94,24 +135,36 @@ class Snipe:
 
     def createMobileModel(self, model):
         print('creating new mobile Model')
+        imageResponse = self.getImageForModel(model);
+        if(imageResponse == False):
+            imageResponse = None
         payload = {
 			"name": model,
             "category_id": self.ios_category_id,
             "manufacturer_id": self.manufacturer_id,
             "model_number": model,
-            "fieldset_id": self.ios_fieldset_id
+            "fieldset_id": self.ios_fieldset_id,
+            "image": imageResponse
         }
         return self.snipeItRequest("POST", "/models", json = payload)
     def createAppleTvModel(self, model):
         print('creating new Apple Tv Model')
+        imageResponse = self.getImageForModel(model);
+        if(imageResponse == False):
+            imageResponse = None
         payload = {
 			"name": model,
             "category_id": self.tvos_category_id,
             "manufacturer_id": self.manufacturer_id,
             "model_number": model,
-            "fieldset_id": self.tvos_fieldset_id
+            "fieldset_id": self.tvos_fieldset_id,
+            "image": imageResponse
         }
         return self.snipeItRequest("POST", "/models", json = payload)
+
+    def updateModel(self, model_id, payload):
+        print("updating model "+model_id+" with payload", payload)
+        return self.snipeItRequest("PATCH", "/models/"+model_id, json = payload)
 
     def buildPayloadFromMosyle(self, payload):
         finalPayload = {
@@ -154,8 +207,6 @@ class Snipe:
         elif(eithernetMac != None):
             finalPayload['_snipeit_mac_address_1'] = eithernetMac
         
-
-        
         return finalPayload
 
     def snipeItRequest(self, type, url, params = None, json = None):
@@ -183,6 +234,26 @@ class Snipe:
             print(Fore.RED+'Unknown request type'+Style.RESET_ALL)
             return None
 
+    def getImageForModel(self, modelNumber):
+        if self.apple_image_check == True:
+
+            url = "https://img.appledb.dev/device@512/" + modelNumber + "/0.png"
+            print("Get image from URL", url)
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+                base64encoded = base64.b64encode(response.content).decode("utf8")
+                fullImageSring = "data:image/png;name=0.png;base64,"+ base64encoded;
+                return fullImageSring;
+            
+                
+            except requests.exceptions.HTTPError as err:
+                print(Fore.RED + "Error getting image from apple db", err, Style.RESET_ALL)
+                return False
+        else:
+            print("Image checking is disabled.")
+            return False
+        
 
 #if __name__ == "__main__":
     #token_snipe = Snipe("Bearer = ".self.token)
