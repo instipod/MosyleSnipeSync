@@ -91,7 +91,7 @@ class Snipe:
         if(imageResponse == False):
             imageResponse = None
 
-        nameResponse = getFriendlyNameForModel(model)
+        nameResponse = self.getFriendlyNameForModel(model)
         if(nameResponse == False):
             nameResponse = model
 
@@ -101,19 +101,21 @@ class Snipe:
             "manufacturer_id": self.manufacturer_id,
             "model_number": model,
             "fieldset_id": self.macos_fieldset_id,
-            "image":imageResponse
+            #"image":imageResponse
         }
 
         print('Creating Snipe Model with payload:', payload)
         results = self.snipeItRequest("POST", "/models", json = payload)
-        #print('the server returned ', results);
+        print('the server returned ', results.content);
         return results
 
     def createAsset(self, model, payload):
         print('Creating Snipe Hardware')
-        print(payload);
+        payload['asset_tag'] = payload['serial']
         payload['status_id'] = 2
         payload['model_id'] = model
+
+        print(payload)
         
         asset = self.snipeItRequest("POST", "/hardware", json = payload).json()
         #print(asset)
@@ -156,7 +158,7 @@ class Snipe:
         if(imageResponse == False):
             imageResponse = None
 
-        nameResponse = getFriendlyNameForModel(model)
+        nameResponse = self.getFriendlyNameForModel(model)
         if(nameResponse == False):
             nameResponse = model
 
@@ -166,16 +168,17 @@ class Snipe:
             "manufacturer_id": self.manufacturer_id,
             "model_number": model,
             "fieldset_id": self.ios_fieldset_id,
-            "image": imageResponse
+            #"image": imageResponse
         }
         return self.snipeItRequest("POST", "/models", json = payload)
+    
     def createAppleTvModel(self, model):
         print('creating new Apple Tv Model')
         imageResponse = self.getImageForModel(model);
         if(imageResponse == False):
             imageResponse = None
         
-        nameResponse = getFriendlyNameForModel(model)
+        nameResponse = self.getFriendlyNameForModel(model)
         if(nameResponse == False):
             nameResponse = model
 
@@ -194,6 +197,12 @@ class Snipe:
         return self.snipeItRequest("PATCH", "/models/"+model_id, json = payload)
 
     def buildPayloadFromMosyle(self, payload):
+        return {
+            #"asset_tag": asset,
+            "name": payload['device_name'],
+            "serial": payload['serial_number']
+        }
+
         finalPayload = {
             #"asset_tag": asset,
             "name": payload['device_name'],
@@ -246,22 +255,22 @@ class Snipe:
 
 
         if(type == "GET"):
-            print('Sending GET request to snipeit', url)
+            print('Sending GET request to snipeit', self.url + url)
             return requests.get(self.url + url, headers = self.headers, params = params)
         elif(type == "POST"):
-            print('Sending POST request to snipeit', url)
+            print('Sending POST request to snipeit', self.url + url)
             if not self.dry_run:
                 return requests.post(self.url + url, headers = self.headers, json = json)
             else:
                 return requests.Response()
         elif(type == "PATCH"):
-            print('Sending PATCH request to snipeit', url)
+            print('Sending PATCH request to snipeit', self.url + url)
             if not self.dry_run:
                 return requests.patch(self.url + url, headers = self.headers, json = json)
             else:
                 return requests.Response()
         elif(type == "DELETE"):
-            print('Sending DELETE request to snipeit', url)
+            print('Sending DELETE request to snipeit', self.url + url)
             if not self.dry_run:
                 return requests.delete(self.url + url, headers = self.headers)
             else:

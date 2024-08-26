@@ -119,9 +119,11 @@ for deviceType in deviceTypes:
                 snipe.assignAsset(mosyle_user, asset['payload']['id'])
                 continue
 
-        # Update existing Devices              
+        # Update existing Devices
+        print("HELLO")
         print(asset)
-        if asset['total'] == 1:
+
+        if 'total' in asset.keys() and asset['total'] == 1:
             #f"{x:.2f}"
             print('Asset ', sn['serial_number'],' already exists in SnipeIt. Update it.')
             print(asset['rows'][0]['name'])
