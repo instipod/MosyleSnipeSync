@@ -147,14 +147,14 @@ for deviceType in deviceTypes:
             else:
                 print('no assignement actions')
         
-        print("Checking to see if Mosyle needs an updated asset tag")
+        #print("Checking to see if Mosyle needs an updated asset tag")
         #if there is no asset tag on mosyle, add the snipeit asset tag
-        if(sn['asset_tag'] == None or sn['asset_tag'] == "" or sn['asset_tag'] != asset['rows'][0]['asset_tag']):
+        #if(sn['asset_tag'] == None or sn['asset_tag'] == "" or sn['asset_tag'] != asset['rows'][0]['asset_tag']):
             #print('update the mosyle asset tag of device ', sn['serial_number'], 'to ', asset['rows'][0]['asset_tag'])
             #mosyle.setAssetTag(sn['serial_number'], asset['rows'][0]['asset_tag'])
-            print("two way sync is not implemented")
-        else:
-            print('Mosyle already has an asset tag of: ', sn['asset_tag'])
+        #    print("two way sync is not implemented")
+        #else:
+        #    print('Mosyle already has an asset tag of: ', sn['asset_tag'])
     
     print('Finished with OS: ', deviceType)
     print('')
