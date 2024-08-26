@@ -56,19 +56,14 @@ for deviceType in deviceTypes:
     #print(mosyle_response)
     if 'status' in mosyle_response and mosyle_response['status'] != "OK":
         print('There was an issue with the Mosyle API. Stopping.', mosyle_response['message'])
-        exit();
-    if 'status' in mosyle_response['response'][0]:
-        print('There was an issue with the Mosyle API. Stopping script.')
-        print(mosyle_response['response'][0]['info'])
-        exit()
+        exit(1)
 
     print('starting snipe')
 
-
     print('Looping through Mosyle Hardware List')
     # Return Mosyle hardware and search them in snipe
-    for sn in mosyle_response['response'][0]['devices']:
-        print('Sarting for Mosyle Device ', sn['device_name'])
+    for sn in mosyle_response['response']['devices']:
+        print('Starting for Mosyle Device ', sn['device_name'])
         if sn['serial_number'] == None:
             print('There is no serial number here. It must be user enrolled?')
             #print(sn)
@@ -153,8 +148,9 @@ for deviceType in deviceTypes:
         print("Checking to see if Mosyle needs an updated asset tag")
         #if there is no asset tag on mosyle, add the snipeit asset tag
         if(sn['asset_tag'] == None or sn['asset_tag'] == "" or sn['asset_tag'] != asset['rows'][0]['asset_tag']):
-            print('update the mosyle asset tag of device ', sn['serial_number'], 'to ', asset['rows'][0]['asset_tag'])
-            mosyle.setAssetTag(sn['serial_number'], asset['rows'][0]['asset_tag'])
+            #print('update the mosyle asset tag of device ', sn['serial_number'], 'to ', asset['rows'][0]['asset_tag'])
+            #mosyle.setAssetTag(sn['serial_number'], asset['rows'][0]['asset_tag'])
+            print("two way sync is not implemented")
         else:
             print('Mosyle already has an asset tag of: ', sn['asset_tag'])
     

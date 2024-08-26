@@ -7,12 +7,14 @@ class Mosyle:
 	def __init__(self, key, url = "https://businessapi.mosyle.com/v1", user = "", password = "", dry_run=False):
 		# Attribute the variable to the instance
 		self.url = url
+		self.key = key
 		self.request = requests.Session()
-		self.request.headers["accesstoken"] = key
+		self.request.headers["accessToken"] = key
 		self.request.headers["content-type"] = "application/json"
 		loginResponse = self.request.post(self.url + "/login", json = {
 			"email" : user,
-			"password" : password
+			"password" : password,
+			"accessToken": key
 		}).headers
 		self.request.headers["Authorization"] = loginResponse['Authorization']
 		self.dry_run = dry_run
@@ -22,47 +24,49 @@ class Mosyle:
 	def list(self, os):
 		print("Listing devices for OS:", os)
 		params = {
-			"operation": "list",
+			#"operation": "list",
 			"options": {
 				"os": os
-			}
+			},
+			"accessToken": self.key
 		}
 		# Concatanate url and send the request
-		return self.request.post(self.url + "/devices", json = params )
+		return self.request.post(self.url + "/listdevices", json = params )
 
-	def listTimestamp(self, start, end, os):
-		params = {
-			"operation": "list",
-			"options": {
-				"os": os,
-				"enrolldate_start": start,
-				"enrolldate_end": end	
-			}
-		}
-		return self.request.post(self.url + "/devices", json = params )
+	# def listTimestamp(self, start, end, os):
+	# 	params = {
+	# 		"operation": "list",
+	# 		"options": {
+	# 			"os": os,
+	# 			"enrolldate_start": start,
+	# 			"enrolldate_end": end	
+	# 		}
+	# 	}
+	# 	return self.request.post(self.url + "/devices", json = params )
 
 	def listmobile(self):
 		params = {
-			"operation": "list",
+			#"operation": "list",
 			"options": {
 				"os": "ios"
 			}
 		}
-		return self.request.post(self.url + "/devices", json = params )
+		return self.request.post(self.url + "/listdevices", json = params )
 
 	def listuser(self, iduser):
 		params = {
-			"operation": "list_users",
-			"options": { "identifiers": [iduser]
-				}
+			#"operation": "list_users",
+			"options": { 
+				"identifiers": [iduser]
+			}
 		}
-		return self.request.post(self.url + "/users", json = params )
+		return self.request.post(self.url + "/listusers", json = params )
     
-	def setAssetTag(self, serialnumber, tag):
-		params = {
-			"operation": "update_device",
-			"serialnumber": serialnumber,
-			"asset_tag": tag
-		}
-		if not self.dry_run:
-			return self.request.post(self.url + "/devices", json = params )
+	# def setAssetTag(self, serialnumber, tag):
+	# 	params = {
+	# 		"operation": "update_device",
+	# 		"serialnumber": serialnumber,
+	# 		"asset_tag": tag
+	# 	}
+	# 	if not self.dry_run:
+	# 		return self.request.post(self.url + "/devices", json = params )
